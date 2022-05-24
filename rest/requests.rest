@@ -1,0 +1,32 @@
+GET http://localhost:5000/api/users
+
+###
+
+GET http://localhost:5000/api/users/628b8b5a9e57957a4ecabc6f
+
+###
+
+POST http://localhost:5000/api/users/add
+Content-Type: application/json
+
+{
+    "username": "batman@example.com",
+    "password": "sdgsgdfg",
+    "subscribed": true
+}
+
+###
+
+PUT http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+    "_id": "628b64f93a38fb6a8df16ebc",
+    "username": "name@mail.com"
+}
+
+###
+
+# DELETE http://localhost:5000/api/users/62868138357d7bc6956fc063
+
+# ###
