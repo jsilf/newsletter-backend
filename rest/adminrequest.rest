@@ -1,0 +1,13 @@
+GET http://localhost:5000/admin/add
+
+###
+
+POST http://localhost:5000/admin/add
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+###

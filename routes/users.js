@@ -8,6 +8,7 @@ router.use(cookieParser("secret"));
 /* cookies */
 router.get("/set", function (req, res) {
   res.cookie("userId", "randomcookie");
+  //spara id från databasen i cookien
   res.cookie("userIdsigned", "randomcookie", { signed: true });
   res.send("Kaka sparad");
 });
@@ -21,8 +22,6 @@ router.get("/cookies", function (req, res) {
 /* GET users */
 router.get("/", async (req, res, next) => {
   const users = await UserModel.find();
-
-  console.log(users);
 
   res.status(200).json(users);
   //dekryptera lösen?
@@ -44,10 +43,10 @@ router.post("/add", async (req, res, next) => {
   //random keys - cookies
 
   try {
-    const newUser = new UserModel(req.body);
+    const newUser = UserModel(req.body);
     console.log(newUser);
     newUser.save();
-    res.json("Ny användare sparad");
+    res.json("Ny användare sparad" + newUser);
   } catch (error) {
     console.log(error);
     res.json(error.message);
@@ -55,15 +54,22 @@ router.post("/add", async (req, res, next) => {
 });
 
 /* PUT subscriptions */
+//ändra användare i databasen (prenumeration)
 router.put("/", async (req, res, next) => {
-  const { _id, username } = req.body;
+  try {
+    const { _id, subscribed } = req.body;
 
-  const user = await UserModel.findById({ _id: _id });
+    const user = await UserModel.findById({ _id: _id });
 
-  user.username = username;
-  await user.save();
-  res.status(200).json(user);
-  //ändra användare i databasen (prenumeration)
+    user.subscribed = subscribed;
+    await user.save();
+    res
+      .status(200)
+      .json("Användaren har ändrat prenumeration till: " + user.subscribed);
+  } catch (error) {
+    console.log(error);
+    res.json(error.message);
+  }
 });
 
 /* Ta bort användare? */

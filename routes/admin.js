@@ -1,14 +1,19 @@
 var express = require("express");
 var router = express.Router();
 const UserModel = require("../models/user-model");
+const cookieParser = require("cookie-parser");
+const AdminUserModel = require("../models/adminuser-model");
 
-let htmlHead = `<head><link rel="stylesheet" href="/stylesheets/style.css" />
-<script defer src="/javascripts/script.js"></script></head>`;
+router.use(cookieParser("secret"));
+
+let htmlHead = `<link rel="stylesheet" href="/stylesheets/style.css" />`;
 
 /* GET users and subscriptions */
-router.get("/", function (req, res, next) {
+router.get("/", async (req, res, next) => {
+  res.cookie("loggedIn", "false");
+
   const form = `
-  <form action="admin" method="post">
+  <form action="/admin" method="post">
   <h2>Logga in här</h2>
   <label for="username">Användarnamn</label>
   <input type="text" name="username" id="username" />
@@ -20,36 +25,76 @@ router.get("/", function (req, res, next) {
   res.send(htmlHead + form);
 });
 
-router.post("/", (req, res) => {
-  // if inlogg stämmer, redirect till admin/users?
-  res.send("Inloggad");
-});
+router.post("/", async (req, res) => {
+  const users = await AdminUserModel.find();
 
-router.get("/users", async (req, res, next) => {
-  const users = await UserModel.find();
-  console.log("alla användare: " + users);
+  let userId = "";
+  let password = "";
+  let username = "";
 
-  let userInfo = `<div class='admin-container'><button id="logoutBtn">Logga ut</button>`;
-  //kan man ha både res.send och res.redirect??
-  for (let i = 0; i < users.length; i++) {
-    const user = users[i];
-    console.log("Användare: " + user._id);
+  users.forEach((user) => {
+    userId = user._id.toString();
+    username = user.username;
+    password = user.password;
+  });
+  res.cookie("userIdsigned", userId, { signed: true });
 
-    userInfo += `
-    
-    <ul>
-      <li>Användarnamn: ${user.username}</li>
-      <li>${user.subscribed ? "Prenumererar" : "Prenumererar inte"}</li>
-    </ul>
-    `;
+  let usernameInput = req.body.username;
+  let passwordInput = req.body.password;
+  let userID = req.signedCookies["userIdsigned"];
+
+  if (usernameInput === username && passwordInput === password) {
+    res.cookie("loggedIn", "true");
+    res.send(
+      `<p>Du är inloggad</p> <a href="/admin/${userID}/users">Klicka här för att se alla användare</a>`
+    );
+  } else {
+    res.redirect("/admin");
   }
-  userInfo += "</div>";
-
-  res.send(htmlHead + userInfo);
 });
 
-// router.get("/users/:id", function (req, res, next) {
-//   res.send("Kolla på en specifik användare");
-// });
+router.get("/:id/users", async (req, res, next) => {
+  try {
+    const users = await UserModel.find();
+    if (req.cookies.loggedIn === "true") {
+      let userInfo = `<div class='admin-container'>
+  <button><a href="/admin">Logga ut</a></button><table>
+  <h2>Alla användare</h2>`;
+
+      for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        userInfo += `
+
+    <p>${user.subscribed ? `${user.username},` : ""}</p>
+    <tr>
+      <td>${user.username}</td>
+ 
+      <td>${user.subscribed ? "Prenumererar" : "Prenumererar inte"}</td>
+    </tr>
+
+    `;
+      }
+      userInfo += "</table></div>";
+
+      res.send(htmlHead + userInfo);
+    } else {
+      res.send("Du är inte inloggad");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//Spara nya adminanvändare
+router.post("/add", async (req, res) => {
+  try {
+    const newAdminUser = AdminUserModel(req.body);
+    newAdminUser.save();
+    res.json("Ny adminanvändare sparad: " + newAdminUser);
+  } catch (error) {
+    console.log(error);
+    res.json(error.message);
+  }
+});
 
 module.exports = router;
