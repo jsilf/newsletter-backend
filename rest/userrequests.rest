@@ -6,13 +6,24 @@ GET http://localhost:5000/api/users/628cd88264d57586407fa7f9
 
 ###
 
+POST http://localhost:5000/api/users/login
+Content-Type: application/json
+
+{
+    "username": "aaaa@example.com",
+    "password": "hej"
+}
+
+###
+
 POST http://localhost:5000/api/users/add
 Content-Type: application/json
 
 {
-    "username": "batman@example.com",
+    "username": "blabla",
     "password": "hej",
-    "subscribed": true
+    "subscribed": true,
+    "isLoggedIn": true
 }
 
 ###
@@ -21,7 +32,7 @@ PUT http://localhost:5000/api/users
 Content-Type: application/json
 
 {
-    "_id": "628ce8d1d36b439d6ce60096",
+    "_id": "628e564971db5e6396993511",
    "subscribed": false
 }
 

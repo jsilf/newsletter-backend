@@ -15,6 +15,9 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    isLoggedIn: {
+      type: Boolean,
+    },
   },
   {
     versionKey: false,

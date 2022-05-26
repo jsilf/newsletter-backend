@@ -85,7 +85,7 @@ router.get("/:id/users", async (req, res, next) => {
   }
 });
 
-//Spara nya adminanvändare
+//Spara nya adminanvändare i databasen om det behövs fler
 router.post("/add", async (req, res) => {
   try {
     const newAdminUser = AdminUserModel(req.body);
