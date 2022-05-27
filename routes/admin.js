@@ -8,7 +8,7 @@ router.use(cookieParser("secret"));
 
 let htmlHead = `<link rel="stylesheet" href="/stylesheets/style.css" />`;
 
-/* GET users and subscriptions */
+/* GET loginformulär för admin */
 router.get("/", async (req, res, next) => {
   res.cookie("loggedIn", "false");
 
@@ -25,6 +25,7 @@ router.get("/", async (req, res, next) => {
   res.send(htmlHead + form);
 });
 
+/* POST logga in */
 router.post("/", async (req, res) => {
   const users = await AdminUserModel.find();
 
@@ -45,35 +46,36 @@ router.post("/", async (req, res) => {
 
   if (usernameInput === username && passwordInput === password) {
     res.cookie("loggedIn", "true");
-    res.send(
-      `<p>Du är inloggad</p> <a href="/admin/${userID}/users">Klicka här för att se alla användare</a>`
-    );
+    res.redirect(`/admin/${userID}/users`);
   } else {
-    res.redirect("/admin");
+    res
+      .status(401)
+      .send(
+        htmlHead +
+          `<h1>Fel inlogg, </h1><button><a href="/admin">Tillbaka till inloggsidan</a></button>`
+      );
   }
 });
-
+/* Inloggad admin */
 router.get("/:id/users", async (req, res, next) => {
   try {
     const users = await UserModel.find();
+
     if (req.cookies.loggedIn === "true") {
-      let userInfo = `<div class='admin-container'>
-  <button><a href="/admin">Logga ut</a></button><table>
-  <h2>Alla användare</h2>`;
+      let userInfo = `
+    <h1>Administratörssida</h1>
+    <div class='admin-container'>
+      <button><a href="/admin">Logga ut</a></button><table>
+      <h3>Användare som prenumererar</h3>`;
 
-      for (let i = 0; i < users.length; i++) {
-        const user = users[i];
-        userInfo += `
-
-    <p>${user.subscribed ? `${user.username},` : ""}</p>
+      users.forEach((user) => {
+        userInfo += `<p>
+    ${user.subscribed ? `${user.username},` : ""}</p>
     <tr>
       <td>${user.username}</td>
- 
       <td>${user.subscribed ? "Prenumererar" : "Prenumererar inte"}</td>
-    </tr>
-
-    `;
-      }
+    </tr>`;
+      });
       userInfo += "</table></div>";
 
       res.send(htmlHead + userInfo);
@@ -85,7 +87,7 @@ router.get("/:id/users", async (req, res, next) => {
   }
 });
 
-//Spara nya adminanvändare i databasen om det behövs fler
+//Spara nya adminanvändare i databasen om det behövs
 router.post("/add", async (req, res) => {
   try {
     const newAdminUser = AdminUserModel(req.body);

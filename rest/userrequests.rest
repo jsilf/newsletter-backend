@@ -10,8 +10,9 @@ POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
-    "username": "aaaa@example.com",
-    "password": "hej"
+    "username": "test",
+    "password": "test",
+    "subscribed": true
 }
 
 ###
@@ -20,10 +21,9 @@ POST http://localhost:5000/api/users/add
 Content-Type: application/json
 
 {
-    "username": "blabla",
-    "password": "hej",
-    "subscribed": true,
-    "isLoggedIn": true
+    "username": "test",
+    "password": "test",
+    "subscribed": true
 }
 
 ###
@@ -35,9 +35,3 @@ Content-Type: application/json
     "_id": "628e564971db5e6396993511",
    "subscribed": false
 }
-
-###
-
-# DELETE http://localhost:5000/api/users/62868138357d7bc6956fc063
-
-# ###

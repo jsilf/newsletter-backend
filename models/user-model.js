@@ -18,6 +18,10 @@ const UserSchema = new mongoose.Schema(
     isLoggedIn: {
       type: Boolean,
     },
+    randomkey: {
+      type: String,
+      required: true,
+    },
   },
   {
     versionKey: false,
