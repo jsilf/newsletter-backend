@@ -4,8 +4,6 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 let cors = require("cors");
 
-const PORT = 3000;
-
 const usersRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 
@@ -34,8 +32,8 @@ async function init() {
   } catch (error) {
     console.log(error);
   }
-  app.listen(process.env.PORT || 3000, () =>
-    console.log(`Server is up and running on port: ${PORT}`)
+  app.listen(process.env.PORT || 5000, () =>
+    console.log(`Server is up and running on port: 3000`)
   );
 }
 
