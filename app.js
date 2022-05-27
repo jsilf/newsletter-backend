@@ -19,10 +19,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/users", usersRouter);
 app.use("/admin", adminRouter);
 
-//env i gitignore?
-// const uri =
-//   "mongodb+srv://dbUser:vJtLTSVFaUpMlPyx@cluster0.zyhip.mongodb.net/?retryWrites=true&w=majority";
-
 const uri = "mongodb://localhost:27017/newsletter";
 
 async function init() {
