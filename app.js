@@ -34,7 +34,7 @@ async function init() {
   } catch (error) {
     console.log(error);
   }
-  app.listen(PORT, () =>
+  app.listen(process.env.PORT || 3000, () =>
     console.log(`Server is up and running on port: ${PORT}`)
   );
 }
