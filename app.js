@@ -3,12 +3,15 @@ const path = require("path");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 let cors = require("cors");
+
 const PORT = 5000;
 
 const usersRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 
 let app = express();
+
+require("dotenv").config();
 
 app.use(cors());
 app.use(logger("dev"));
@@ -19,11 +22,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/users", usersRouter);
 app.use("/admin", adminRouter);
 
-//env i gitignore?
-// const uri =
-//   "mongodb+srv://dbUser:vJtLTSVFaUpMlPyx@cluster0.zyhip.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.ATLAS_URI;
 
-const uri = "mongodb://localhost:27017/newsletter";
+// const uri = "mongodb://localhost:27017/newsletter";
 
 async function init() {
   try {

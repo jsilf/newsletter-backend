@@ -27,7 +27,7 @@ router.post("/login", async (req, res, next) => {
 
   if (foundUser) {
     foundUser.isLoggedIn = true;
-    return res.json(foundUser._id);
+    return res.status(200).json(foundUser._id);
   } else {
     res.status(401).send("Fel användarnamn eller lösen");
   }
@@ -66,11 +66,11 @@ router.post("/add", async (req, res, next) => {
       });
       // console.log(newUser);
       newUser.save();
-      res.json("Ny användare sparad, nu kan du logga in");
+      res.status(200).json("Ny användare sparad, nu kan du logga in");
     }
   } catch (error) {
     console.log(error);
-    res.json("Något blev fel vid skapande av användare");
+    res.status(404).json("Något blev fel vid skapande av användare");
   }
 });
 
@@ -90,8 +90,8 @@ router.put("/", async (req, res, next) => {
     }
     res.json(subscriptionResponse);
   } catch (error) {
-    console.log(error);
-    res.json(error.message);
+    console.log(error.message);
+    res.status(404).json("Något blev fel vid ändrande av prenumeration");
   }
 });
 

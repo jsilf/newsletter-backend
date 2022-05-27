@@ -1,2 +1,3 @@
 # newsletter-backend
+
 School assignment

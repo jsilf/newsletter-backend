@@ -46,13 +46,13 @@ router.post("/", async (req, res) => {
 
   if (usernameInput === username && passwordInput === password) {
     res.cookie("loggedIn", "true");
-    res.redirect(`/admin/${userID}/users`);
+    res.status(200).redirect(`/admin/${userID}/users`);
   } else {
     res
       .status(401)
       .send(
         htmlHead +
-          `<h1>Fel inlogg, </h1><button><a href="/admin">Tillbaka till inloggsidan</a></button>`
+          `<h1>Fel inlogg, </h1><a href="/admin"><button>Tillbaka till inloggsidan</button></a>`
       );
   }
 });
@@ -65,7 +65,7 @@ router.get("/:id/users", async (req, res, next) => {
       let userInfo = `
     <h1>Administratörssida</h1>
     <div class='admin-container'>
-      <button><a href="/admin">Logga ut</a></button><table>
+    <a href="/admin"><button>Logga ut</button></a><table>
       <h3>Användare som prenumererar</h3>`;
 
       users.forEach((user) => {
