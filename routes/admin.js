@@ -46,14 +46,12 @@ router.post("/", async (req, res) => {
 
   if (usernameInput === username && passwordInput === password) {
     res.cookie("loggedIn", "true");
-    res.status(200).redirect(`/admin/${userID}/users`);
+    res.redirect(`/admin/${userID}/users`);
   } else {
-    res
-      .status(401)
-      .send(
-        htmlHead +
-          `<h1>Fel inlogg, </h1><a href="/admin"><button>Tillbaka till inloggsidan</button></a>`
-      );
+    res.send(
+      htmlHead +
+        `<h1>Fel inlogg, </h1><a href="/admin"><button>Tillbaka till inloggsidan</button></a>`
+    );
   }
 });
 /* Inloggad admin */
