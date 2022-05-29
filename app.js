@@ -32,7 +32,8 @@ async function init() {
   } catch (error) {
     console.log(error);
   }
-  app.listen(process.env.PORT || 5000, () =>
+  //funkar inte att deploya på heroku??
+  app.listen(process.env.PORT || 3000, () =>
     console.log(`Server is up and running on port: 3000`)
   );
 }
