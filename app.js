@@ -20,9 +20,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/users", usersRouter);
 app.use("/admin", adminRouter);
 
-const uri = process.env.ATLAS_URI;
+// const uri = process.env.ATLAS_URI;
 
-// const uri = "mongodb://localhost:27017/newsletter";
+const uri = "mongodb://localhost:27017/newsletter";
 
 async function init() {
   try {
@@ -32,7 +32,7 @@ async function init() {
   } catch (error) {
     console.log(error);
   }
-  //funkar inte att deploya på heroku??
+
   app.listen(process.env.PORT || 3000, () =>
     console.log(`Server is up and running on port: 3000`)
   );
